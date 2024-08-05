@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style1.css">
+
+</head>
+
+<body onload="begcity()">
+    <div class="container">
+        <div class="card">
+            <div class="one">
+                <div class="nav">
+                    <div class="search">
+                        <input type="text" placeholder="Enter city" id="search" value="pune">
+                        <button onclick="show()"> search</button>
+                    </div>
+                    <div class="date">
+                        <h2> <span id="date"></span>
+                            <span id="month"></span>
+                            <span id="year"></span>
+                        </h2>
+
+                    </div>
+                </div>
+                <div class="weather-info">
+                    <div class="temp-data">
+                        <div class="temp-info"> </div>
+                        <div class="temp-img"><span>&#176;C </span> </div>
+                    </div>
+
+                    <div class="rem-info">
+                        <div class="wind-data">
+                            <div class="wind-img"><img src="images/wind.gif" alt=""></div>
+                            <div class="wind-info"></div>
+                        </div>
+                        <div class="humidity-data">
+                            <div class="humidity-img"><img src="images/humidity.gif" alt=""></div>
+                            <div class="humidity-info"></div>
+                        </div>
+
+                    </div>
+            ~</div>
+            </div>
+            <div class="two">
+                <div class="title">
+                    <h3>Weather</h3>
+                </div>
+                <div class="time">
+                    <span id="hrs">
+
+                    </span>
+                    <span>:</span>
+                    <span id="min"> </span>
+                    <span>:</span>
+                    <span id="sec"> </span>
+                </div>
+                <div class="temp-value">
+                    <div class="max-temp-data">
+                        <div class="max-temp-img"><img src="images/thermameter.gif" alt=""></div>
+                        <div class="max-temp"></div>
+                    </div>
+
+                    <div class="min-temp-data">
+                        <div class="min-temp-img"><img src="images/thermameter2.gif" alt=""></div>
+                        <div class="min-temp"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const degree = document.getElementsByClassName('temp-info')
+        const wind = document.getElementsByClassName('wind-info')
+        const humidity = document.getElementsByClassName('humidity-info');
+        const max_temp = document.getElementsByClassName('max-temp');
+        const min_temp = document.getElementsByClassName('min-temp');
+
+        let userData;
+
+        function begcity() {
+            show(); // Call the show function on page load
+        }
+
+        function show() {
+
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${search.value}&appid=074e3cf34f29d282a0d174bf7f90581b&units=metric`;
+            fetch(url)
+                .then(res => res.json())
+                .then((response) => {
+                    userData = response;
+
+                    clearData();
+                    creatCard();
+                }).catch((error) => {
+                    alert("invalid city")
+
+                    console.log(error)
+                })
+console.log(userData);  
+        }
+
+        function creatCard() {
+
+            let windData = document.createElement('p');
+            let tempData = document.createElement('p');
+            let humData = document.createElement('p');
+            let mintempdata = document.createElement('p');
+            let maxtempdata = document.createElement('p');
+            tempData.innerText = userData.main.temp;
+            tempData.setAttribute('class', 'temp-data')
+            windData.innerText = userData.wind.speed + "mps";
+            maxtempdata.innerText = userData.main.temp_max;
+            mintempdata.innerText = userData.main.temp_min;
+            humData.innerText = userData.main.humidity + "%";
+            wind[0].appendChild(windData)
+            degree[0].appendChild(tempData)
+
+            humidity[0].appendChild(humData)
+            min_temp[0].appendChild(mintempdata);
+            max_temp[0].appendChild(maxtempdata);
+        }
+        function clearData() {
+            while (degree[0].firstChild) {
+                degree[0].removeChild(degree[0].firstChild);
+            }
+            while (wind[0].firstChild) {
+                wind[0].removeChild(wind[0].firstChild);
+            }
+            while (humidity[0].firstChild) {
+                humidity[0].removeChild(humidity[0].firstChild);
+            }
+            while (max_temp[0].firstChild) {
+                max_temp[0].removeChild(max_temp[0].firstChild);
+            }
+            while (min_temp[0].firstChild) {
+                min_temp[0].removeChild(min_temp[0].firstChild);
+            }
+
+        }
+
+
+
+    </script>
+    <script>
+        let hrs = document.getElementById("hrs");
+        let min = document.getElementById("min");
+        let sec = document.getElementById("sec");
+        setInterval(() => {
+
+            let currentTime = new Date();
+            hrs.innerHTML = (currentTime.getHours() < 10 ? "0" : "") + currentTime.getHours();
+            min.innerHTML = (currentTime.getMinutes() < 10 ? "0" : "") + currentTime.getMinutes();
+            sec.innerHTML = (currentTime.getSeconds() < 10 ? "0" : "") + currentTime.getSeconds();
+            const date = new Date();
+
+            let d = date.getDate();
+            let m = date.getMonth();
+            let y = date.getFullYear();
+
+
+            document.getElementById("date").innerHTML = d;
+            document.getElementById("month").innerHTML = m;
+            document.getElementById("year").innerHTML = y;
+
+
+        }, 1000);
+
+    </script>
+
+</body>
+
+</html>
